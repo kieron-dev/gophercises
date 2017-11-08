@@ -14,11 +14,11 @@ var _ = Describe("Quiz", func() {
 	Context("command flags", func() {
 		It("displays usages given -h flag", func() {
 			command := exec.Command(pathToQuiz, "-h")
-			stdout := gbytes.NewBuffer()
-			session, err := gexec.Start(command, stdout, GinkgoWriter)
+			stderr := gbytes.NewBuffer()
+			session, err := gexec.Start(command, GinkgoWriter, stderr)
 			Expect(err).NotTo(HaveOccurred())
-			Eventually(session).Should(gexec.Exit(1))
-			Eventually(stdout).Should(gbytes.Say("Usage"))
+			Eventually(session).Should(gexec.Exit(2))
+			Eventually(stderr).Should(gbytes.Say("Usage"))
 		})
 
 		It("doesn't display usage when no -h flag", func() {

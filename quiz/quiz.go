@@ -2,24 +2,14 @@ package main
 
 import (
 	"flag"
-	"fmt"
-	"os"
 )
 
 func main() {
-	var help bool
-	flag.BoolVar(&help, "h", false, "show usage")
+	var (
+		csv   string
+		limit int
+	)
+	flag.StringVar(&csv, "csv", "problems.csv", "a csv file in the format of 'question,answer'")
+	flag.IntVar(&limit, "limit", 30, "the time limit for the quiz in seconds")
 	flag.Parse()
-
-	usage := `Usage of %s:
-  -csv string
-        a csv file in the format of 'question,answer' (default "problems.csv")
-  -limit int
-        the time limit for the quiz in seconds (default 30)
-`
-
-	if help {
-		fmt.Printf(usage, os.Args[0])
-		os.Exit(1)
-	}
 }
