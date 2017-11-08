@@ -17,8 +17,8 @@ var _ = Describe("Quiz", func() {
 			stdout := gbytes.NewBuffer()
 			session, err := gexec.Start(command, stdout, GinkgoWriter)
 			Expect(err).NotTo(HaveOccurred())
-			Eventually(session).Should(gexec.Exit())
-			Expect(stdout).To(gbytes.Say("Usage"))
+			Eventually(session).Should(gexec.Exit(1))
+			Eventually(stdout).Should(gbytes.Say("Usage"))
 		})
 
 		It("doesn't display usage when no -h flag", func() {
@@ -27,7 +27,7 @@ var _ = Describe("Quiz", func() {
 			session, err := gexec.Start(command, stdout, GinkgoWriter)
 			Expect(err).NotTo(HaveOccurred())
 			Eventually(session).Should(gexec.Exit())
-			Expect(stdout).ToNot(gbytes.Say("Usage"))
+			Consistently(stdout).ShouldNot(gbytes.Say("Usage"))
 		})
 	})
 })
