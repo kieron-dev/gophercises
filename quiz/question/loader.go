@@ -2,6 +2,7 @@ package question
 
 import (
 	"encoding/csv"
+	"fmt"
 	"io"
 	"os"
 )
@@ -9,7 +10,7 @@ import (
 func LoadQuestions(filePath string) ([]QAPair, error) {
 	file, err := os.Open(filePath)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("Question file '%s' cannot be found", filePath)
 	}
 	csvReader := csv.NewReader(file)
 
@@ -20,7 +21,7 @@ func LoadQuestions(filePath string) ([]QAPair, error) {
 			if err == io.EOF {
 				break
 			}
-			return nil, err
+			return nil, fmt.Errorf("Question file '%s' is not valid CSV", filePath)
 		}
 		questions = append(questions, QAPair{
 			Question: line[0],

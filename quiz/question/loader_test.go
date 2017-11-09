@@ -17,4 +17,9 @@ var _ = Describe("Loader", func() {
 			Answer:   "10",
 		}))
 	})
+
+	It("raises an error if a line does not contain two items", func() {
+		_, err := question.LoadQuestions("./fixtures/baddata.csv")
+		Expect(err.Error()).To(ContainSubstring("not valid CSV"))
+	})
 })
