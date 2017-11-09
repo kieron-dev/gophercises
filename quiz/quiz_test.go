@@ -2,6 +2,7 @@ package main_test
 
 import (
 	"fmt"
+	"io"
 	"os/exec"
 
 	. "github.com/onsi/ginkgo"
@@ -51,6 +52,41 @@ var _ = Describe("Quiz", func() {
 			Expect(err).NotTo(HaveOccurred())
 			Eventually(session).Should(gexec.Exit(1))
 			Eventually(stderr).Should(gbytes.Say(fmt.Sprintf("Question file '%s' is not valid CSV", csvFile)))
+		})
+	})
+
+	Context("asking questions", func() {
+		var (
+			command *exec.Cmd
+			stdin   io.WriteCloser
+			stdout  *gbytes.Buffer
+			stderr  *gbytes.Buffer
+			err     error
+		)
+
+		BeforeEach(func() {
+			command = exec.Command(pathToQuiz, "-csv", "./question/fixtures/questions.csv")
+			stdin, err = command.StdinPipe()
+			stdout = gbytes.NewBuffer()
+			stderr = gbytes.NewBuffer()
+			_, err := gexec.Start(command, stdout, stderr)
+			Expect(err).NotTo(HaveOccurred())
+		})
+		AfterEach(func() {
+			gexec.Kill()
+		})
+
+		It("successfully asks the first question", func() {
+			Eventually(stdout).Should(gbytes.Say(`Problem #1: `))
+		})
+
+		It("pauses after the first question waiting for input", func() {
+			Consistently(stdout).ShouldNot(gbytes.Say(`Problem #2: `))
+		})
+
+		It("prints the second question after first answer entered", func() {
+			fmt.Fprintln(stdin, "foo")
+			Eventually(stdout).Should(gbytes.Say(`Problem #2: `))
 		})
 	})
 })
