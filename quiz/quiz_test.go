@@ -89,4 +89,37 @@ var _ = Describe("Quiz", func() {
 			Eventually(stdout).Should(gbytes.Say(`Problem #2: `))
 		})
 	})
+
+	Context("keeping score", func() {
+		var (
+			command *exec.Cmd
+			stdin   io.WriteCloser
+			stdout  io.Writer
+			stderr  io.Writer
+			err     error
+		)
+
+		BeforeEach(func() {
+			command = exec.Command(pathToQuiz, "-csv", "./question/fixtures/onequestion.csv")
+			stdin, err = command.StdinPipe()
+			stdout = gbytes.NewBuffer()
+			stderr = GinkgoWriter
+			_, err := gexec.Start(command, stdout, stderr)
+			Expect(err).NotTo(HaveOccurred())
+		})
+
+		AfterEach(func() {
+			gexec.Kill()
+		})
+
+		It("should return 1 / 1 for a correct answer in 1 question test", func() {
+			fmt.Fprintln(stdin, "10")
+			Eventually(stdout).Should(gbytes.Say(`You scored 1 out of 1.`))
+		})
+
+		It("should return 0 / 1 for an incorrect answer in 1 question test", func() {
+			fmt.Fprintln(stdin, "100")
+			Eventually(stdout).Should(gbytes.Say(`You scored 0 out of 1.`))
+		})
+	})
 })

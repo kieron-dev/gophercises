@@ -23,9 +23,14 @@ func main() {
 		os.Exit(1)
 	}
 
+	score := 0
 	for i, q := range questions {
 		fmt.Printf("Problem #%d: %s = ", i+1, q.Question)
 		input := ""
 		fmt.Scanln(&input)
+		if input == q.Answer {
+			score++
+		}
 	}
+	fmt.Printf("You scored %d out of %d.\n", score, len(questions))
 }
