@@ -12,6 +12,7 @@ func LoadQuestions(filePath string) ([]QAPair, error) {
 	if err != nil {
 		return nil, fmt.Errorf("Question file '%s' cannot be found", filePath)
 	}
+	defer file.Close()
 	csvReader := csv.NewReader(file)
 
 	questions := []QAPair{}
