@@ -24,6 +24,9 @@ func LoadQuestions(filePath string) ([]QAPair, error) {
 			}
 			return nil, fmt.Errorf("Question file '%s' is not valid CSV", filePath)
 		}
+		if len(line) != 2 {
+			return nil, fmt.Errorf("Question file '%s' must contain two columns", filePath)
+		}
 		questions = append(questions, QAPair{
 			Question: line[0],
 			Answer:   line[1],

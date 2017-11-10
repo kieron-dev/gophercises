@@ -18,8 +18,13 @@ var _ = Describe("Loader", func() {
 		}))
 	})
 
-	It("raises an error if a line does not contain two items", func() {
+	It("raises an error if a line does not contain the same number of items as the one above", func() {
 		_, err := question.LoadQuestions("./fixtures/baddata.csv")
 		Expect(err.Error()).To(ContainSubstring("not valid CSV"))
+	})
+
+	It("raises an error if the csv file doesn't contain a list of two item lines", func() {
+		_, err := question.LoadQuestions("./fixtures/wrongdata.csv")
+		Expect(err.Error()).To(ContainSubstring("must contain two columns"))
 	})
 })
