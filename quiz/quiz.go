@@ -4,6 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"time"
 
 	"github.com/kieron-pivotal/gophercises/quiz/question"
 )
@@ -24,13 +25,26 @@ func main() {
 	}
 
 	score := 0
-	for i, q := range questions {
-		fmt.Printf("Problem #%d: %s = ", i+1, q.Question)
-		input := ""
-		fmt.Scanln(&input)
-		if input == q.Answer {
-			score++
+	timeout := make(chan interface{})
+
+	go func() {
+		time.Sleep(time.Duration(limit) * time.Second)
+		fmt.Println("\nTime's up!")
+		close(timeout)
+	}()
+
+	go func() {
+		for i, q := range questions {
+			fmt.Printf("Problem #%d: %s = ", i+1, q.Question)
+			input := ""
+			fmt.Scanln(&input)
+			if input == q.Answer {
+				score++
+			}
 		}
-	}
+		close(timeout)
+	}()
+
+	<-timeout
 	fmt.Printf("You scored %d out of %d.\n", score, len(questions))
 }

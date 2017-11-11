@@ -147,11 +147,12 @@ var _ = Describe("Quiz", func() {
 		})
 
 		It("exits after timeout limit", func() {
+			Eventually(stdout, 2).Should(gbytes.Say("Time's up!"))
 			Eventually(session, 2).Should(gexec.Exit())
 		})
 
-		FIt("prints score after timeout", func() {
-			Eventually(stdout).Should(gbytes.Say("You scored"))
+		It("prints score after timeout", func() {
+			Eventually(stdout, 2).Should(gbytes.Say("You scored 0 out of"))
 		})
 	})
 })
