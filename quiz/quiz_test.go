@@ -113,7 +113,7 @@ var _ = Describe("Quiz", func() {
 		})
 
 		It("should return 1 / 1 for a correct answer in 1 question test", func() {
-			fmt.Fprintln(stdin, "10")
+			fmt.Fprintln(stdin, " 10  ")
 			Eventually(stdout).Should(gbytes.Say(`You scored 1 out of 1.`))
 		})
 

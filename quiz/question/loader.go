@@ -4,7 +4,9 @@ import (
 	"encoding/csv"
 	"fmt"
 	"io"
+	"math/rand"
 	"os"
+	"time"
 )
 
 func LoadQuestions(filePath string) ([]QAPair, error) {
@@ -33,5 +35,15 @@ func LoadQuestions(filePath string) ([]QAPair, error) {
 		})
 	}
 
-	return questions, nil
+	ret := shuffle(questions)
+	return ret, nil
+}
+
+func shuffle(questions []QAPair) []QAPair {
+	r := rand.New(rand.NewSource(time.Now().UnixNano()))
+	ret := []QAPair{}
+	for _, i := range r.Perm(len(questions)) {
+		ret = append(ret, questions[i])
+	}
+	return ret
 }
