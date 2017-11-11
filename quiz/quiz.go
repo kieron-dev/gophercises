@@ -12,10 +12,10 @@ import (
 func main() {
 	var (
 		csv   string
-		limit int
+		limit float64
 	)
 	flag.StringVar(&csv, "csv", "problems.csv", "a csv file in the format of 'question,answer'")
-	flag.IntVar(&limit, "limit", 30, "the time limit for the quiz in seconds")
+	flag.Float64Var(&limit, "limit", 30, "the time limit for the quiz in seconds")
 	flag.Parse()
 
 	questions, err := question.LoadQuestions(csv)

@@ -134,7 +134,9 @@ var _ = Describe("Quiz", func() {
 		)
 
 		BeforeEach(func() {
-			command = exec.Command(pathToQuiz, "-csv", "./question/fixtures/onequestion.csv", "-limit", "1")
+			command = exec.Command(pathToQuiz,
+				"-csv", "./question/fixtures/onequestion.csv",
+				"-limit", "0.1")
 			stdin, err = command.StdinPipe()
 			stdout = gbytes.NewBuffer()
 			stderr = GinkgoWriter
@@ -147,12 +149,12 @@ var _ = Describe("Quiz", func() {
 		})
 
 		It("exits after timeout limit", func() {
-			Eventually(stdout, 2).Should(gbytes.Say("Time's up!"))
-			Eventually(session, 2).Should(gexec.Exit())
+			Eventually(stdout).Should(gbytes.Say("Time's up!"))
+			Eventually(session).Should(gexec.Exit())
 		})
 
 		It("prints score after timeout", func() {
-			Eventually(stdout, 2).Should(gbytes.Say("You scored 0 out of"))
+			Eventually(stdout).Should(gbytes.Say("You scored 0 out of"))
 		})
 	})
 })
