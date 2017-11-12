@@ -11,14 +11,16 @@ import (
 
 func main() {
 	var (
-		csv   string
-		limit float64
+		csv     string
+		limit   float64
+		shuffle bool
 	)
 	flag.StringVar(&csv, "csv", "problems.csv", "a csv file in the format of 'question,answer'")
 	flag.Float64Var(&limit, "limit", 30, "the time limit for the quiz in seconds")
+	flag.BoolVar(&shuffle, "shuffle", false, "shuffle questions")
 	flag.Parse()
 
-	questions, err := question.LoadQuestions(csv)
+	questions, err := question.LoadQuestions(csv, shuffle)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err.Error())
 		os.Exit(1)

@@ -9,7 +9,7 @@ import (
 	"time"
 )
 
-func LoadQuestions(filePath string) ([]QAPair, error) {
+func LoadQuestions(filePath string, shuffle bool) ([]QAPair, error) {
 	file, err := os.Open(filePath)
 	if err != nil {
 		return nil, fmt.Errorf("Question file '%s' cannot be found", filePath)
@@ -34,12 +34,13 @@ func LoadQuestions(filePath string) ([]QAPair, error) {
 			Answer:   line[1],
 		})
 	}
-
-	ret := shuffle(questions)
-	return ret, nil
+	if shuffle {
+		questions = shuffleQuestions(questions)
+	}
+	return questions, nil
 }
 
-func shuffle(questions []QAPair) []QAPair {
+func shuffleQuestions(questions []QAPair) []QAPair {
 	r := rand.New(rand.NewSource(time.Now().UnixNano()))
 	ret := []QAPair{}
 	for _, i := range r.Perm(len(questions)) {
